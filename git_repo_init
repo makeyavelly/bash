@@ -1,0 +1,20 @@
+#!/bin/bash
+
+pathGit=~/git
+
+create()
+{
+	dirName="${pathGit}/${i}.git"
+	if [ -d "$dirName" ]; then
+		echo -e "\e[31mРепозиторий ${i} уже существует\e[0m"
+	else
+		mkdir "$dirName"
+		cd "$dirName"
+		git init --bare > /dev/null
+		echo -e "\e[32mРепозиторий ${i} успешно создан\e[0m"
+	fi
+}
+
+for i in $@; do
+	create $i
+done
