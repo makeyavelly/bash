@@ -1,0 +1,6 @@
+#!/bin/bash
+
+rm -f ~/.ssh/authorized_keys
+for i in $(ls *.pub); do
+	cat $i >> ~/.ssh/authorized_keys
+done
