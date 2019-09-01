@@ -1,16 +1,17 @@
 #!/bin/bash
 
-pathGit=~/git
+username=git
+gitpath=/srv/git
 
 create()
 {
-	dirName="${pathGit}/${i}.git"
+	dirName="${gitpath}/${i}.git"
 	if [ -d "$dirName" ]; then
 		echo -e "\e[31mРепозиторий ${i} уже существует\e[0m"
 	else
-		mkdir "$dirName"
+		sudo -u $username mkdir "$dirName"
 		cd "$dirName"
-		git init --bare > /dev/null
+		sudo -u $username git init --bare > /dev/null
 		echo -e "\e[32mРепозиторий ${i} успешно создан\e[0m"
 	fi
 }
