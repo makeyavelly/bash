@@ -1,21 +1,24 @@
 #!/bin/bash
 
-username=git
+gituser=git
+githost=127.0.0.1
 gitpath=/srv/git
 
-create()
-{
-	dirName="${gitpath}/${i}.git"
-	if [ -d "$dirName" ]; then
-		echo -e "\e[31mРепозиторий ${i} уже существует\e[0m"
-	else
-		sudo -u $username mkdir "$dirName"
-		cd "$dirName"
-		sudo -u $username git init --bare > /dev/null
-		echo -e "\e[32mРепозиторий ${i} успешно создан\e[0m"
-	fi
-}
+projectname=$(basename $PWD)
+projectdirname="${projectname}.git"
+projectdirpath="${gitpath}/${projectdirname}"
+gituserhost=${gituser}@${githost}
 
-for i in $@; do
-	create $i
-done
+if ssh -q ${gituserhost} [[ -d "${projectdirpath}" ]] ; then
+	echo -e "\e[31mРепозиторий ${projectname} уже существует\e[0m"
+else
+	git init
+	git add *
+	git commit -m 'Init'
+	git clone --bare . $projectdirname
+	scp -r $projectdirname "${gituserhost}:${gitpath}"
+	rm -rf $projectdirname
+	git remote add origin "${gituserhost}:${projectdirpath}"
+	git push origin master
+	echo -e "\e[32mРепозиторий ${projectname} успешно создан\e[0m"
+fi
