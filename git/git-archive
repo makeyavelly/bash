@@ -1,0 +1,7 @@
+#!/bin/bash
+
+projectname=$(basename $PWD)
+datetime=$(date +%d%m%y)
+lastcommit=$(git log HEAD -1 --pretty='%h')
+
+git archive HEAD --prefix="${projectname}/" | gzip > "${projectname}-${lastcommit}-${datetime}.tar.gz"
