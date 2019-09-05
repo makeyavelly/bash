@@ -1,0 +1,34 @@
+#!/bin/bash
+
+dirname=$1
+tarname=$2.tar
+
+if [ $# -eq 1 ]; then
+	tarname=$dirname.tar
+fi
+
+if [ $# -eq 0 ]; then
+	dirname=$(basename $PWD)
+	tarname=$dirname.tar
+	cd ..
+fi
+
+if [ $dirname = '.' ]; then
+	dirname=$(basename $PWD)
+	cd ..
+	if [ $tarname = '..tar' ]; then
+		tarname=$dirname.tar
+	fi
+fi
+
+if [ $dirname = '..' ]; then
+	cd ..
+	dirname=$(basename $PWD)
+	cd ..
+	if [ $tarname = '...tar' ]; then
+		tarname=$dirname.tar
+	fi
+fi
+
+tar -cf $tarname $dirname
+gzip -9 $tarname
